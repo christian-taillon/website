@@ -2,8 +2,8 @@
 title: 'Latest Intel Brief'
 date: '2025-11-20'
 tags: []
-draft: false
-summary: 'Latest Intel Brief'
+draft: true
+summary: 'Latest Intel Brief (Draft - Jekyll syntax needs conversion to Next.js)'
 ---
 
 
@@ -11,9 +11,12 @@ summary: 'Latest Intel Brief'
 
 ---
 
-{% assign latest_brief = site.briefs | sort: 'date' | reverse | first %}
+{/* TODO: Convert Jekyll liquid syntax to Next.js/React functionality */}
+{/* {% assign latest_brief = site.briefs | sort: 'date' | reverse | first %} */}
 
-<h2 class="post-list-heading">{{ latest_brief.title }}</h2>
-<p class="post-meta">{{ latest_brief.date | date: "%B %-d, %Y" }}</p>
+{/* <h2 class="post-list-heading">{{ latest_brief.title }}</h2> */}
+{/* <p class="post-meta">{{ latest_brief.date | date: "%B %-d, %Y" }}</p> */}
 
-{{ latest_brief.content }}
+{/* {{ latest_brief.content }} */}
+
+This page is currently under construction. It will display the latest intelligence brief once the Jekyll liquid syntax is converted to Next.js functionality.

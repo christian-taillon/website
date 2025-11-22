@@ -31,20 +31,20 @@ summary: 'LLM / GenAI Developer Interview'
 - Experience with HSMs or differential privacy
 
 ### Q1: Which approach is most suitable for preventing prompt injection attacks?
-A) Input sanitization only<br>
-B) Model output validation only<br>
-C) Layered approach with input sanitization, output validation, and runtime monitoring<br>
-D) Choosing a model wiht built-in safety measures<br>
+A) Input sanitization only<br />
+B) Model output validation only<br />
+C) Layered approach with input sanitization, output validation, and runtime monitoring<br />
+D) Choosing a model wiht built-in safety measures<br />
 
 *Explain your choice and describe implementation details.*
 
 **Look for:** Understanding of defense-in-depth, practical implementation experience, and awareness of limitations in each approach. Optminally projects like LlamaGuard or LLMGuard are mentioned. 
 
 ### Q2: For a production RAG system, which combination provides the best balance of performance and accuracy?
-A) Dense embeddings + exact nearest neighbor search<br>
-B) Sparse embeddings + approximate nearest neighbor search<br>
-C) Hybrid dense/sparse embeddings + multi-stage retrieval<br>
-D) Single embedding model + basic keyword filtering<br>
+A) Dense embeddings + exact nearest neighbor search<br />
+B) Sparse embeddings + approximate nearest neighbor search<br />
+C) Hybrid dense/sparse embeddings + multi-stage retrieval<br />
+D) Single embedding model + basic keyword filtering<br />
 
 *Explain your reasoning and discuss tradeoffs.*
 
@@ -87,10 +87,10 @@ D) Single embedding model + basic keyword filtering<br>
 
 ### Q2: Compare these quantization approaches for a production system (explain the tradeoffs of each):
 
-A) Post-training quantization with INT8 <br>
-B) QLoRA fine-tuning with 4-bit base <br>
-C) AWQ (Activation-aware Weight Quantization)<br>
-D) GPTQ with different group sizes<br>
+A) Post-training quantization with INT8 <br />
+B) QLoRA fine-tuning with 4-bit base <br />
+C) AWQ (Activation-aware Weight Quantization)<br />
+D) GPTQ with different group sizes<br />
 
 **Key Points to Look For:**
 - Practical implementation knowledge:
@@ -129,7 +129,7 @@ FP16       | 16-bit   | Fast      | Very Good  | GPU inference
 INT8       | 8-bit    | Faster    | Good       | CPU deployment
 INT4       | 4-bit    | Fastest   | Degraded   | Edge devices
 ```
-<br>
+<br />
 ```
 Quantization Methods
 Method     | Target    | Speed     | Quality    | Implementation Complexity
