@@ -6,7 +6,7 @@ draft: false
 summary: 'Comprehensive Splunk SPL cheatsheet with essential commands for log analysis, threat hunting, and SIEM operations. Quick reference for cybersecurity professionals.'
 ---
 
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 ## Splunk Quick Cheat Sheet
 
 **DNS Lookup**
@@ -102,7 +102,7 @@ eval mytime=strftime(_time,"%Y-%m-%d %H:%M:%S")
 | rest /services/authentication/current-context splunk_server=local
 ```
 
-**Group By Octet** <br>
+**Group By Octet** <br />
 ***2 Octets***
 ```
 | rex field=src_ip "(?<subnet>\d+\.\d+)+\.\d+\.\d+"
@@ -139,7 +139,7 @@ eval mytime=strftime(_time,"%Y-%m-%d %H:%M:%S")
 | nomv foo
 ```
 
-**Sankey Multistaged** <br>
+**Sankey Multistaged** <br />
 ***2 staged***
 ```
 | table src_ip dest_port dest_ip
@@ -158,7 +158,7 @@ eval mytime=strftime(_time,"%Y-%m-%d %H:%M:%S")
 | fields source target count
 ```
 
-**Search time in a lookup** <br>
+**Search time in a lookup** <br />
 Incident Review is used as an example
 ```
 | inputlookup incident_review_lookup
