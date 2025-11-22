@@ -3,7 +3,7 @@ const siteMetadata = {
   title: 'Christian Taillon',
   author: 'Christian Taillon',
   headerTitle: 'Christian Taillon',
-  description: 'Christian Taillon's cybersecurity and AI resource hub. Expert guides on Splunk, threat hunting, SOC operations, LLM security, and open-source intelligence. Comprehensive cheatsheets, tutorials, and tools for information security professionals and AI developers.',
+  description: 'Christian Taillon\'s cybersecurity and AI resource hub. Expert guides on Splunk, threat hunting, SOC operations, LLM security, and open-source intelligence. Comprehensive cheatsheets, tutorials, and tools for information security professionals and AI developers.',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://christiant.io/',
