@@ -1,0 +1,3 @@
+[submodule "christian-taillon.github.io"]
+	path = christian-taillon.github.io
+	url = git@github.com:christian-taillon/christian-taillon.github.io.git
