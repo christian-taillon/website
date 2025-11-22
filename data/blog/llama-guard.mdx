@@ -1,0 +1,62 @@
+---
+title: 'LlamaGuard Filter Pipeline'
+date: '2025-11-20'
+tags: []
+draft: false
+---
+
+## Meta's LLamaGuard Filter
+-----------------------------------
+
+LLamaGuard is Meta's LLM GuardRail model designed to detect harmful or inappropriate AI interactions. It can assess user prompt or model response. It evaluates prompts across 13 distinct categories, determining whether content is safe or unsafe and which categories are violated.
+
+This demonstration leaverages OpenWebUI Compatible Pipeline availalbe on [GitHub/christian-taillon/open-webui-pipelines](https://github.com/christian-taillon/open-webui-pipelines/blob/main/function/llama_guard.py) and the OpenWebUI Community as as Function: [LlamaGuard](https://openwebui.com/f/christiant/llamagaurd/).
+
+## LlamaGaurd
+Based on the [MLCommons taxonomy](https://mlcommons.org/2024/04/mlc-aisafety-v0-5-poc/), the AI model has been trained to evaluate and assign safety labels across 13 distinct hazard categories, which are organized in the following table:
+
+| Category Code | Hazard Type               | Description                         |
+| ------------- | ------------------------- | ----------------------------------- |
+| S1            | Violent Crimes            | Criminal acts involving violence    |
+| S2            | Non-Violent Crimes        | Criminal acts without violence      |
+| S3            | Sex-Related Crimes        | Criminal acts of sexual nature      |
+| S4            | Child Sexual Exploitation | Exploitation of minors              |
+| S5            | Defamation                | False statements harming reputation |
+| S6            | Specialized Advice        | Potentially harmful guidance        |
+| S7            | Privacy                   | Personal information protection     |
+| S8            | Intellectual Property     | Copyright and ownership issues      |
+| S9            | Indiscriminate Weapons    | Weapons of mass destruction         |
+| S10           | Hate                      | Hate speech and discrimination      |
+| S11           | Suicide & Self-Harm       | Self-destructive behavior           |
+| S12           | Sexual Content            | Adult or explicit material          |
+| S13           | Elections                 | Electoral integrity issues          |
+
+
+### Demo 1: LlamaGuard Filter in Action
+----------------------------------
+![llama-guard](/video/LlamaGuard-hq.gif)
+In this demonstration, we see LLamaGuard's privacy protection capabilities.
+
+**No LlamaGuard Filter**: Initially, a user sends sensitive personal information to an external model hosted on CloudFlare. Although the model recognizes this information is sensative and rejects the users request, the damage is done and the sensative information has left the users systems. 
+
+This is seen in the CloudFlare AI Gateway logs. 
+**LlamaGaurd Filter Enabled**: Then the user sends the same prompt through LlamaGaurd Model configured to use the LlamaGaurd Filter.
+
+With LLamaGuard enabled, the system intercepts and blocks the request. Instead of processing potentially sensitive data, the system returns a privacy violation notice. 
+
+#### Other Categories
+A second example shows permitted content (how to adopt a Llama) vs. blocked content (how to steal a Llama) triggering a seperate LlamaGaurd unsafe category. 
+
+### Demo 2: Customizable Security Controls
+------------------------------------
+![llama-guard_customization](/video/LlamaGuard_customization-hq.gif)
+
+The second demonstration showcases the OpenWebUI Filter Installation process and configuration options.
+
+Not everyone will require the same use cases. Personally, I was primarily interested in LlamaGaurd for the probabilitic Privacy features as a second layer of preventing privacy related details from being sent to third party inference providers if my [TokenGuard](https://github.com/christian-taillon/open-webui-pipelines/blob/main/function/tokenGuard.py) fails to properly sanitize the data. 
+
+The abilit to enable to disable certain filters therefore seemed to me to be a required feature. 
+- Users can choose which LlamaGuard model they use (default= llama-guard3:8b).
+- Individual filter categories can be enabled or disabled
+
+__Note: Many OpenWeight Models are significantly less censored then closed source frontineir models.__
