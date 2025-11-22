@@ -16,9 +16,6 @@ This site serves as a resource hub for cybersecurity professionals, featuring:
 - **Framework**: Next.js 15 with React 19
 - **Styling**: Tailwind CSS 4
 - **Content**: MDX with Contentlayer 2
-- **Analytics**: Google Analytics & Umami
-- **Comments**: Giscus
-- **Newsletter**: Buttondown
 - **Deployment**: GitHub Pages
 
 ## Development
@@ -61,15 +58,7 @@ Key configuration files:
 
 ## Environment Variables
 
-Create a `.env` file for sensitive configuration:
-
-```env
-NEXT_PUBLIC_GISCUS_REPO=
-NEXT_PUBLIC_GISCUS_REPOSITORY_ID=
-NEXT_PUBLIC_GISCUS_CATEGORY=
-NEXT_PUBLIC_GISCUS_CATEGORY_ID=
-NEXT_UMAMI_ID=
-```
+No external services are configured. This is a simple portfolio site without analytics, comments, or newsletter features.
 
 ## License
 
