@@ -1,0 +1,86 @@
+---
+title: 'Agentic SOC Mentors & Helpers'
+date: '2025-11-20'
+tags: []
+draft: false
+summary: 'Security operations automation with AI agents for threat intelligence and SOC efficiency'
+---
+
+
+## 🚀 Agentic Systems for Security Operations
+
+An **Agentic System** is fundamentally about combining LLM capabilities with context engineering, tool access, and iterative processing (LLM + Context + Tools + Looping). Rather than just chatting with knowledge scraped from training data, agentic systems can call remote APIs, use data processing tools, reference knowledge bases, SOPs, and standards to provide contextual, actionable responses. This allows even weaker models to add significant value by having them operate with curated expertise and real-time data access.
+
+I've conducted workshops, spoken at local professional organizations, and presented at conferences like Cactus Con on this subject. It's important to note that this doesn't replace every tool and workflow for me. While I'm somewhat trying to escape it as my go-to topic (along with what seems like every other security professional suddenly becoming an "AI evangelist" 🙄), it keeps following me—probably because the rapid development and pace of AI starting to affect our industry is undeniable.
+
+**Congratulation Note:** [Dataminr to Acquire ThreatConnect](https://www.dataminr.com/press/announcement/dataminr-to-acquire-threatconnect/) - Congratulations to the ThreatConnect team on this exciting development!
+
+*Future resource note: After the contract is complete, I'll share the slides from my latest keynote at the CyberShare Summit.*
+
+<div class="video-container" style="text-align: center; margin: 40px 0; max-width: 100%;">
+    <iframe style="width: 100%; max-width: 800px; height: 450px;" src="https://www.youtube.com/embed/0WHKTPB-6HA?si=wKnx9u5oim-NHN2X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
+## 🔐 Tools Demonstrated
+
+### ThreatConnect TIP
+IOC enrichment and threat intelligence operations through the Threat Intelligence Platform that brings together all sources of open source, commercial, and internal intelligence for comprehensive security context.
+
+### Polarity by ThreatConnect  
+Unified threat intelligence, context, and knowledge at the point of analysis and decision-making. This integration shows federated search, correlation, and analysis capabilities that put intelligence and security data where analysts need it most.
+
+### Armis MCP
+Asset intelligence and vulnerability management platform providing real-time security insights through comprehensive asset discovery and continuous monitoring capabilities.
+
+*All tool implementations except Armis are available as open source: [OpenWebUI Security Pipelines](https://github.com/christian-taillon/open-webui-pipelines)*
+
+## 🛠️ Technical Implementation
+
+For **ThreatConnect TIP** and **Polarity**, I built OpenWebUI-compatible pipelines that enable LLMs to understand what actions are possible with each tool and how to properly call functions. These pipelines provide structured tool definitions that allow agents to intelligently interact with these platforms.
+
+For **Armis MCP**, they developed their own MCP (Model Context Protocol) service, which is demonstrated in the video being accessed through an OpenAI-MCP proxy for security and authentication purposes: [MCP-to-OpenAPI-Proxy](https://github.com/christian-taillon/MCP-to-OpenAPI-Proxy).
+
+## 🧠 The Evolution of LLM Tool Use
+
+Open source models are starting to become increasingly reliable at using tools, while closed source models consistently demonstrate strong tool execution capabilities. Even "flash" or "lite" models like Claude Haiku 4.5 are proving reliable for tool use operations. This capability is crucial because analysis requires extensive tool usage and data processing.
+
+## 📊 Bridging the Skills Gap in Security Operations
+
+Many vendors will tell/sell you on these tools replacing humans for ~$2k a month of processing. I really don't see these effective for simple replacement. Automation (SOAR) capabilities have existed for years, and LLMs certainly give us the ability to have machines operate with direction in a way that can be more dynamically variability tolerant; however, I believe that a great strength of LLMs is the ability for humans to interact extremely natively with computer systems in natural language, creating charts and visualizations or dynamically generated user interfaces when that level of input is needed from the human. I've even been able to recently speak to my LLMs to task them with data retrieval, enrichment, and processing tasks - all while running offline local models for LLMs, text to speech and speech to text (albeit local models are slow for the latter and not the most powerful for the former).
+
+Still I see LLMs as offering the potential to help bridge the skills gap as juniors enter the field without the same advanced tool experience. If LLMs can help someone without query syntax knowledge obtain the right answers, or iterate though 10 searches for an information request that a human can process in twice the amount of time, or help guide a junior through the SOP contextualizing the data returned from tools with SOP - I think we can provide more entry level contributors with a direct path to creating significant value with less resource drain from existing team members on training (a real factor to consider for enterprises) while reducing cyber risk by improving security operations.
+
+## 🎯 Beyond Model Intelligence: The Agentic Advantage
+
+**Our value shouldn't be that we are the best at using a tool that is challenging for others—it should be in our outcomes.**
+
+Agentic systems/environments can improve the performance of LLMs to a greater degree than model-intelligence. It isn't just about bigger and more costly models and I don't see fine-tuning as the guiding tool to most significantly improve the consistent reliability of using LLMs to accomplish tasks in a way that meaningfully adds value to most workflows.
+
+Developers have rapidly understood and executed on the findings that given the proper context and tooling, models can more reliably plan and iteratively engage in task execution with the ability to use tools and testing to correct their mistakes along the way.
+
+While the open source community and private vendors have flooded the developer tooling market with agentic tools and environments, I believe this problem may be easier to accomplish than the application of Agentic LLM use in other applications such as Security Operations where we lack tried and true tools and methods to reliably verify mistakes in analysis.
+
+Still, for me at least, the potential for LLMs to operate very dynamically with natural language understanding on large contexts—larger than I have time to often consume—and make calls to tools that I potentially lack the proper knowledge or polished skill to use quickly, is exciting.
+
+Instead of replacing Junior contributors across industries, I believe this can help close the skill gap as we look to humans for critical thinking, self-driven directives from their roles, creativity and resourcefulness that these systems do not currently emulate—and perhaps the prob and stats nature of these models never will.
+
+**Our value to an organization shouldn't be derived from the fact that we maybe the best at using a complex tool in a very mature and advanced way that our colleges with less awareness of a system can't engage with to accomplish task at speeds and in ways juniors dream of achieving.**
+
+**Our value should be in our ability to execute reliably and consistently on tasks. If, one day, we can find how to use these Agentic systems in Security Operations to the degree of reliability that developers are beginning to accomplish I think juniors may require less ramp-up time and be more readily effective.**
+
+## 🎯 The Power of Threat Intelligence Automation
+
+This is still in its experimental phase. We are exploring its efficacy. I have personally found use out of this. Though I don't think we will be automating away an entire SOC or Vibe-Triaging anytime soon, I do hope we as an industry can hire more analysts that make a bigger dent in the fight with AI assisted triage.
+
+LLMs allow us to automate and process larger amounts of unstructured data in ways that can drive decision-making. AgenticLLMs potentially offer a dynamic way to guide and work with people at different skill levels to execute on many intelligently directed tasks given by a human thinker or allow someone without the advanced skills typically required for tool access to process then.
+
+This represents a fundamental shift in how security teams can interact with their data and tools, potentially democratizing access to advanced threat intelligence capabilities while maintaining the contextual understanding that human expertise provides.
+
+## 📚 Resources & Implementation
+
+Want to implement these solutions yourself? Check out the code and community resources:
+
+* [📦 GitHub Repository - Open WebUI Security Pipelines](https://github.com/christian-taillon/open-webui-pipelines)
+* [🛠️ OpenWebUI Community Profile](https://openwebui.com/u/christiant)
+* [🔗 MCP-to-OpenAPI Proxy](https://github.com/christian-taillon/MCP-to-OpenAPI-Proxy)
+* [📊 Slides: Building a Private GenAI Team with Open-Source Models](https://christiant.io/static/download/Building%20a%20Private%20GenAI%20Team%20with%20Open-Source%20Models.pdf) - Earlier deck from Agentic AI talks given to various groups in the valley

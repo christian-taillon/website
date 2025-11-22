@@ -1,0 +1,234 @@
+---
+title: 'LLM / GenAI Developer Interview'
+date: '2025-11-20'
+tags: []
+draft: false
+summary: 'LLM / GenAI Developer Interview'
+---
+
+
+# Generative AI Technical Interview Questions (Senior Level)
+
+## Model Security & Local Deployment
+
+### Q1: Explain why using the Pickle format for model serialization is insecure. What alternative formats are safer, and which frameworks support them?
+
+**Key Points to Look For:**
+- Understanding of deserialization risks and arbitrary code execution
+- Knowledge of safe formats (Safetensors, GGML/GGUF)
+- Framework compatibility (HuggingFace, llama.cpp, vLLM)
+- Implementation of security measures like sandboxing and validation
+- Experience with quantization formats and their security implications
+
+### Q2: How would you securely deploy a local LLM in a production environment with sensitive data?
+
+**Key Points to Look For:**
+- Container isolation strategies (Docker/Kubernetes)
+- Hardware-based encryption for model weights
+- Input/output validation and sanitization
+- Service minimization and hardening
+- Access control implementation and monitoring
+- Experience with HSMs or differential privacy
+
+### Q1: Which approach is most suitable for preventing prompt injection attacks?
+A) Input sanitization only<br>
+B) Model output validation only<br>
+C) Layered approach with input sanitization, output validation, and runtime monitoring<br>
+D) Choosing a model wiht built-in safety measures<br>
+
+*Explain your choice and describe implementation details.*
+
+**Look for:** Understanding of defense-in-depth, practical implementation experience, and awareness of limitations in each approach. Optminally projects like LlamaGuard or LLMGuard are mentioned. 
+
+### Q2: For a production RAG system, which combination provides the best balance of performance and accuracy?
+A) Dense embeddings + exact nearest neighbor search<br>
+B) Sparse embeddings + approximate nearest neighbor search<br>
+C) Hybrid dense/sparse embeddings + multi-stage retrieval<br>
+D) Single embedding model + basic keyword filtering<br>
+
+*Explain your reasoning and discuss tradeoffs.*
+
+**Look for:** Understanding of performance vs. accuracy tradeoffs, real-world implementation experience, and awareness of scaling considerations.
+ 
+# Quantization Interview Questions
+
+### Q1: Walk through the process of quantizing a 16-bit model to 4-bit using GGML/GGUF. What considerations and tradeoffs would you make?
+
+**Key Points to Look For:**
+- Understanding of quantization methods:
+  ```python
+  # Example approach
+  k-means quantization
+  Round-to-nearest
+  Group-size selection
+  Weight distribution analysis
+  ```
+- Hardware-specific optimizations:
+  ```
+  • CPU: ARM vs x86 considerations
+  • Memory alignment
+  • SIMD instruction sets
+  • Cache-friendly layouts
+  ```
+- Quality preservation techniques:
+  ```
+  • Layer-wise quantization
+  • Activation aware quantization
+  • Calibration dataset selection
+  • Critical layer preservation
+  ```
+- Performance measurement:
+  ```
+  • Perplexity comparison
+  • Inference speed benchmarks
+  • Memory usage profiling
+  • Quality-size tradeoffs
+  ```
+
+### Q2: Compare these quantization approaches for a production system (explain the tradeoffs of each):
+
+A) Post-training quantization with INT8 <br>
+B) QLoRA fine-tuning with 4-bit base <br>
+C) AWQ (Activation-aware Weight Quantization)<br>
+D) GPTQ with different group sizes<br>
+
+**Key Points to Look For:**
+- Practical implementation knowledge:
+  ```
+  • Memory requirements
+  • Training complexity
+  • Inference speed
+  • Accuracy impact
+  ```
+- Hardware considerations:
+  ```
+  • GPU memory bandwidth
+  • CPU SIMD utilization
+  • Power consumption
+  • Deployment constraints
+  ```
+- Use case optimization:
+  ```
+  • Latency requirements
+  • Quality thresholds
+  • Resource constraints
+  • Scaling needs
+  ```
+
+**Example Metrics to Discuss:**
+Ah, you're absolutely right - I apologize for that error. Let me correct the metrics table:
+
+Yes, that's much clearer! Here are two distinct tables:
+
+```
+Precision Formats
+Format     | Memory   | Speed     | Quality    | Use Case Example
+FP32       | 32-bit   | Slowest   | Best       | Training, Quality benchmarking
+BF16       | 16-bit   | Fast      | Excellent  | Training, Modern GPUs
+FP16       | 16-bit   | Fast      | Very Good  | GPU inference
+INT8       | 8-bit    | Faster    | Good       | CPU deployment
+INT4       | 4-bit    | Fastest   | Degraded   | Edge devices
+```
+<br>
+```
+Quantization Methods
+Method     | Target    | Speed     | Quality    | Implementation Complexity
+PTQ        | INT8/4    | Fast      | Good       | Low (post-training only)
+QLoRA      | 4-bit     | Medium    | Very Good* | High (requires fine-tuning)
+AWQ        | 4-bit     | Fast      | Better     | Medium (calibration needed)
+GPTQ       | 3-4 bit   | Fast      | Good       | Medium (group quantization)
+SpQR       | 4-bit     | Fast      | Better     | High (emerging technique)
+```
+
+*Note: Methods can be combined (e.g., AWQ + QLoRA) and actual results depend heavily on:
+*Note: QLoRA maintains good quality during fine-tuning despite low precision by using a technique called Low-Rank Adaptation, but it's not better than the original FP32 model.
+
+The general principle is:
+- Higher precision (32-bit, 16-bit) = Better quality but more memory/slower
+- Lower precision (8-bit, 4-bit) = Slightly degraded quality but faster/less memory
+
+**Red Flags:**
+- Not understanding memory alignment requirements
+- Ignoring hardware-specific optimizations
+- Lack of knowledge about calibration
+- No experience with quantization debugging
+- Unfamiliarity with common failure modes
+
+**Bonus Points:**
+- Experience with custom quantization schemes
+- Understanding of mixed precision approaches
+- Knowledge of emerging techniques (SpQR, OmniQuant)
+- Hardware-specific optimization experience
+
+## Embeddings & Reranking
+
+### Q1: Describe your experience implementing embedding-based search systems.
+
+**Key Points to Look For:**
+- Choice and implementation of embedding models (Sentence-BERT, etc.)
+- Vector database selection and optimization
+- Hybrid search strategies (ANN + keyword)
+- Performance metrics and evaluation methods
+- Experience with FAISS, Qdrant, or similar systems
+
+### Q2: Detail your approach to reranking implementation.
+
+**Key Points to Look For:**
+- Model selection (Cross-Encoders, Cohere, etc.)
+- Integration with existing search infrastructure
+- Latency optimization techniques
+- Caching strategies
+- Evaluation metrics and testing approaches
+
+## RAG Implementation
+
+### Q1: Walk through your approach to building a production RAG system.
+
+**Key Points to Look For:**
+- Document processing and chunking strategies
+- Vector store selection and optimization
+- Query preprocessing and reformulation
+- Context window management
+- Evaluation metrics and quality assurance
+- Error handling and fallback strategies
+
+### Q2: How do you evaluate and optimize RAG system effectiveness?
+
+**Key Points to Look For:**
+- Precision@k implementation
+- Context relevance scoring
+- LLM-as-a-judge evaluation methods
+- Monitoring and logging strategies
+- Performance optimization techniques
+- Real-world benchmarking experience
+
+## Advanced Topics
+
+### Q1: Compare base models vs. instruct models.
+
+**Key Points to Look For:**
+- Understanding of architectural differences
+- Fine-tuning approaches and techniques
+- Use case optimization strategies
+- Implementation considerations
+- Experience with both types in production
+
+### Q2: Explain tool integration with local models (e.g., llama.cpp).
+
+**Key Points to Look For:**
+- Grammar-constrained output implementation
+- Function calling patterns
+- Tool abstraction layers
+- Error handling and validation
+- Performance optimization strategies
+- Security considerations
+
+---
+
+**Overall Assessment Areas:**
+- Depth of practical experience
+- Problem-solving approach
+- Security awareness
+- System design knowledge
+- Performance optimization understanding
+- Production deployment experience

@@ -1,0 +1,370 @@
+---
+title: 'KQL Beginner Guide | Azure Kusto Query Language'
+date: '2025-11-20'
+tags: []
+draft: false
+summary: 'Comprehensive KQL (Kusto Query Language) guide for Azure Log Analytics, Application Insights, and Azure services. Essential queries for cybersecurity and IT operations.'
+---
+
+
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+
+# KQL (Kusto Query Language) Beginner Guide
+
+Kusto Query Language (KQL) is the powerful query language used across Azure services including Log Analytics, Application Insights, Azure Monitor, and more. This guide provides essential KQL knowledge for cybersecurity professionals and IT operations teams.
+
+## Table of Contents
+- [Basic Concepts](#basic-concepts)
+- [Operators](#operators)
+- [String Operations](#string-operations)
+- [Time Operations](#time-operations)
+- [Aggregation Functions](#aggregation-functions)
+- [Join Operations](#join-operations)
+- [Security Use Cases](#security-use-cases)
+
+## Basic Concepts
+
+### Data Structure
+KQL works with tabular data where:
+- **Tables**: Contain rows of data
+- **Columns**: Named fields in each row
+- **Operators**: Transform or filter data
+- **Functions**: Perform calculations or transformations
+
+### Basic Query Structure
+```kql
+TableName
+| where ColumnName == "value"
+| project Column1, Column2
+| limit 100
+```
+
+## Operators
+
+### Comparison Operators
+```kql
+// Equality
+SecurityEvent
+| where EventID == 4625
+
+// Inequality
+SecurityEvent
+| where EventID != 4624
+
+// Greater/Less than
+SecurityEvent
+| where EventID > 4620
+SecurityEvent
+| where EventID < 4630
+
+// Contains/Substrings
+SecurityEvent
+| where AccountName contains "admin"
+SecurityEvent
+| where Message startswith "Logon"
+```
+
+### Logical Operators
+```kql
+// AND operator
+SecurityEvent
+| where EventID == 4625 and AccountName contains "admin"
+
+// OR operator
+SecurityEvent
+| where EventID == 4625 or EventID == 4624
+
+// NOT operator
+SecurityEvent
+| where EventID != 4625
+
+// Complex logic
+SecurityEvent
+| where (EventID == 4625 or EventID == 4624) and AccountName !contains "system"
+```
+
+### Range Operations
+```kql
+// Between values (inclusive)
+SecurityEvent
+| where EventID between (4620 .. 4630)
+
+// In list
+SecurityEvent
+| where EventID in (4624, 4625, 4634, 4647)
+
+// Not in list
+SecurityEvent
+| where EventID !in (4624, 4625)
+```
+
+## String Operations
+
+### String Matching
+```kql
+// Case-sensitive contains
+SecurityEvent
+| where Message contains_cs "failed"
+
+// Case-insensitive contains
+SecurityEvent
+| where Message contains "FAILED"
+
+// Regular expressions
+SecurityEvent
+| where AccountName matches regex @"\w+admin\w*"
+
+// Exact match
+SecurityEvent
+| where AccountType == "User"
+```
+
+### String Functions
+```kql
+// Extract substring
+SecurityEvent
+| extend Domain = substring(AccountName, 0, indexof(AccountName, "\\"))
+| extend Username = substring(AccountName, indexof(AccountName, "\\") + 1)
+
+// String replacement
+SecurityEvent
+| extend CleanMessage = replace_string(Message, "Error", "Issue")
+
+// String concatenation
+SecurityEvent
+| extend FullName = strcat(AccountName, " @ ", Computer)
+```
+
+## Time Operations
+
+### Time Filters
+```kql
+// Last 24 hours
+SecurityEvent
+| where TimeGenerated > ago(24h)
+
+// Specific time range
+SecurityEvent
+| where TimeGenerated between (datetime(2024-01-01) .. datetime(2024-01-31))
+
+// Relative time
+SecurityEvent
+| where TimeGenerated > ago(1d) and TimeGenerated < ago(1h)
+
+// Time formatting
+SecurityEvent
+| extend Hour = format_datetime(TimeGenerated, "HH:mm")
+| extend Date = format_datetime(TimeGenerated, "yyyy-MM-dd")
+```
+
+### Time Calculations
+```kql
+// Time differences
+SecurityEvent
+| sort by TimeGenerated asc
+| extend TimeDiff = prev(TimeGenerated, 1) - TimeGenerated
+
+// Binning by time
+SecurityEvent
+| summarize Count = count() by bin(TimeGenerated, 1h)
+
+// Time arithmetic
+SecurityEvent
+| extend FutureTime = TimeGenerated + 1d
+| extend PastTime = TimeGenerated - 2h
+```
+
+## Aggregation Functions
+
+### Count Operations
+```kql
+// Simple count
+SecurityEvent
+| summarize TotalEvents = count()
+
+// Count by field
+SecurityEvent
+| summarize EventCount = count() by EventID
+
+// Count distinct
+SecurityEvent
+| summarize UniqueComputers = dcount(Computer)
+```
+
+### Statistical Functions
+```kql
+// Basic statistics
+SecurityEvent
+| summarize
+    Total = count(),
+    Average = avg(EventID),
+    Minimum = min(EventID),
+    Maximum = max(EventID)
+    by EventID
+
+// Percentiles
+SecurityEvent
+| summarize
+    P50 = percentile(TimeGenerated, 50),
+    P95 = percentile(TimeGenerated, 95),
+    P99 = percentile(TimeGenerated, 99)
+```
+
+### Advanced Aggregations
+```kql
+// Multiple aggregations
+SecurityEvent
+| summarize
+    EventCount = count(),
+    UniqueAccounts = dcount(AccountName),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated)
+    by Computer, EventID
+
+// Conditional aggregations
+SecurityEvent
+| summarize
+    SuccessfulLogons = countif(EventID == 4624),
+    FailedLogons = countif(EventID == 4625),
+    TotalAttempts = count()
+    by Computer
+```
+
+## Join Operations
+
+### Inner Join
+```kql
+// Join security events with computer information
+SecurityEvent
+| join kind=inner (
+    Heartbeat
+    | project Computer, OSType, OSName
+) on Computer
+```
+
+### Left Join
+```kql
+// Include all security events, add computer info where available
+SecurityEvent
+| join kind=leftouter (
+    Heartbeat
+    | project Computer, OSType, OSName
+) on Computer
+```
+
+### Multiple Table Joins
+```kql
+// Join multiple tables for comprehensive view
+SecurityEvent
+| join kind=inner (
+    Heartbeat
+    | project Computer, OSType
+) on Computer
+| join kind=leftouter (
+    Update
+    | where Classification == "Security Updates"
+    | summarize LastSecurityUpdate = max(PublishedDate) by Computer
+) on Computer
+```
+
+## Security Use Cases
+
+### Failed Login Analysis
+```kql
+SecurityEvent
+| where EventID == 4625
+| summarize
+    FailedAttempts = count(),
+    UniqueAccounts = dcount(AccountName),
+    FirstFailure = min(TimeGenerated),
+    LastFailure = max(TimeGenerated)
+    by Computer, AccountName
+| where FailedAttempts > 5
+| order by FailedAttempts desc
+```
+
+### Account Lockout Investigation
+```kql
+SecurityEvent
+| where EventID == 4740
+| project TimeGenerated, Computer, AccountName, CallerComputerName
+| join kind=leftouter (
+    SecurityEvent
+    | where EventID == 4625
+    | where TimeGenerated > ago(1h)
+    | summarize FailedAttempts = count() by AccountName, Computer
+) on AccountName, Computer
+| order by TimeGenerated desc
+```
+
+### Suspicious Process Detection
+```kql
+SecurityEvent
+| where EventID == 4688
+| where NewProcessName contains "powershell.exe"
+| where CommandLine contains "-enc" or CommandLine contains "-encodedcommand"
+| project TimeGenerated, Computer, AccountName, NewProcessName, CommandLine
+| order by TimeGenerated desc
+```
+
+### Network Anomaly Detection
+```kql
+// High volume outbound connections
+DeviceNetworkEvents
+| where ActionType == "ConnectionSuccess"
+| where RemoteIPType == "Public"
+| summarize ConnectionCount = count() by DeviceName, RemoteIP
+| where ConnectionCount > 100
+| order by ConnectionCount desc
+```
+
+### Malware Investigation
+```kql
+DeviceFileEvents
+| where ActionType == "FileCreated"
+| where FolderPath contains "temp" or FolderPath contains "downloads"
+| where FileName endswith ".exe"
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where ActionType == "ProcessCreated"
+    | project DeviceName, FileName, ProcessCommandLine
+) on DeviceName, FileName
+| order by TimeGenerated desc
+```
+
+## Best Practices
+
+### Performance Optimization
+1. **Filter early**: Use `where` clauses as early as possible
+2. **Limit results**: Use `limit` or `take` to reduce data volume
+3. **Use appropriate operators**: Prefer `==` over `contains` when possible
+4. **Avoid full scans**: Always include time filters
+
+### Query Structure
+1. **Start with table selection**
+2. **Apply filters (where)**
+3. **Transform data (extend/project)**
+4. **Aggregate (summarize)**
+5. **Sort and limit results**
+
+### Common Patterns
+```kql
+// Investigation template
+TableName
+| where TimeGenerated > ago(24h)
+| where ConditionField == "suspicious_value"
+| extend AdditionalField = extract("regex", 0, RawData)
+| summarize Count = count() by GroupField
+| order by Count desc
+| limit 100
+```
+
+## Resources
+
+- [Azure KQL Documentation](https://docs.microsoft.com/en-us/azure/kusto/query/)
+- [KQL Quick Reference](https://docs.microsoft.com/en-us/azure/kusto/query/kql-quick-reference)
+- [Log Analytics Query Examples](https://docs.microsoft.com/en-us/azure/azure-monitor/logs/query-examples)
+
+---
+
+*This guide covers essential KQL concepts for cybersecurity operations. For advanced topics and specific Azure service integrations, refer to the official Microsoft documentation.*

@@ -1,0 +1,497 @@
+---
+title: 'vLLM Production Guide 2025'
+date: '2025-11-20'
+tags: []
+draft: false
+summary: 'vLLM Production Guide 2025'
+---
+
+
+# 🚀 vLLM Production Deployment Guide
+
+## 🔥 **What is vLLM?**
+
+**vLLM** is a high-performance LLM inference and serving system designed for production workloads. It provides:
+
+- **Tensor Parallelism** - Distribute models across multiple GPUs
+- **PagedAttention** - Advanced memory management for faster inference  
+- **Continuous Batching** - Optimize throughput with dynamic batching
+- **OpenAI-Compatible API** - Drop-in replacement for OpenAI endpoints
+- **SafeTensors Support** - Secure model loading without pickle vulnerabilities
+
+---
+
+## ⚡ **Performance Advantages**
+
+| Feature | Traditional Inference | vLLM | Performance Gain |
+|---------|---------------------|------|----------------|
+| **Memory Management** | Static allocation | PagedAttention | 2-4x better |
+| **Batch Processing** | Fixed batch size | Continuous batching | 8-24x throughput |
+| **Multi-GPU Scaling** | Manual sharding | Tensor parallelism | Near-linear scaling |
+| **Context Handling** | Limited to model max | Dynamic context | Flexible |
+
+---
+
+## 🛠️ **Environment Setup**
+
+### Prerequisites
+```bash
+# System requirements
+- NVIDIA GPU drivers >= 525
+- CUDA 12.0+  
+- Python 3.9+
+- Docker/Podman (recommended for production)
+- Hugging Face token for restricted models
+```
+
+### NVIDIA Drivers Check
+```bash
+nvidia-smi  # Verify GPU access
+```
+
+### Python Installation (Native)
+```bash
+pip install vllm transformers accelerate
+pip install flash-attn  # For attention optimization
+```
+
+### Docker Installation (Recommended)
+```bash
+docker pull vllm/vllm-openai:latest
+# Verify Docker GPU access
+docker run --rm --gpus all nvidia/cuda:12.0.1-baseubuntu20.04 nvidia-smi
+```
+
+---
+
+## 🐳 **Production Deployments**
+
+### Single GPU Deployment (Llama 3.1:8B)
+```bash
+docker run --runtime nvidia --gpus all \
+    --name vllm_llama8b \
+    -v ~/.cache/huggingface:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --ipc=host \
+    --env "HUGGING_FACE_HUB_TOKEN=$HF_TOKEN" \
+    vllm/vllm-openai:latest \
+    --model meta-llama/Llama-3.1-8B-Instruct \
+    --trust-remote-code \
+    --safetensors \
+    --max-model-len 8192 \
+    --gpu-memory-utilization 0.9
+```
+
+### Multi-GPU Deployment (Llama 3.3:70B)
+```bash
+docker run --runtime nvidia --gpus all \
+    --name vllm_llama70b \
+    -v ~/.cache/huggingface:/root/.cache/huggingface \
+    -p 8001:8000 \
+    --ipc=host \
+    --env "HUGGING_FACE_HUB_TOKEN=$HF_TOKEN" \
+    vllm/vllm-openai:latest \
+    --model meta-llama/Llama-3.3-70B-Instruct \
+    --tensor-parallel-size 2 \  # Use 2 GPUs
+    --trust-remote-code \
+    --safetensors \
+    --max-model-len 4096 \
+    --gpu-memory-utilization 0.85 \
+    --enable-chunked-prefill
+```
+
+### Python Native Deployment
+```python
+from vllm import LLM, SamplingParams
+
+# Initialize LLM with SafeTensors
+llm = LLM(
+    model="meta-llama/Llama-3.1-8B-Instruct",
+    trust_remote_code=True,
+    tensor_parallel_size=1,
+    gpu_memory_utilization=0.9,
+    enforce_eager=False  # Use CUDA graphs
+)
+
+# Sampling parameters
+sampling_params = SamplingParams(
+    temperature=0.7,
+    max_tokens=512,
+    top_p=0.95
+)
+
+# Generate text
+prompts = [
+    "Explain the security implications of LLM prompt injection:",
+    "How does SafeTensors prevent model weight attacks?"
+]
+
+outputs = llm.generate(prompts, sampling_params)
+for output in outputs:
+    print(f"Generated: {output.outputs[0].text}")
+```
+
+---
+
+## 🔒 **Security Best Practices with SafeTensors**
+
+### Why SafeTensors for Production?
+```python
+# Traditional pickle models - SECURITY RISK
+# Can execute arbitrary code during loading
+
+# SafeTensors - SECURE
+model = LLM(
+    model="meta-llama/Llama-3.1-8B-Instruct",
+    # vLLM automatically prefers SafeTensors files
+    # Falls back to pickle only if SafeTensors not available
+)
+```
+
+### Security Benefits
+- **No Code Execution** - Pure tensor data loading
+- **Tamper Detection** - Built-in integrity verification
+- **Faster Loading** - Optimized binary format
+- **Memory Safe** - Protected against malicious model files
+
+### Security Configuration
+```bash
+# Force SafeTensors only (no fallback to pickle)
+docker run --runtime nvidia --gpus all \
+    vllm/vllm-openai:latest \
+    --model meta-llama/Llama-3.1-8B-Instruct \
+    --safetensors-only \  # Reject pickle files
+    --trust-remote-code \
+    --enforce-eager
+```
+
+---
+
+## 📊 **Performance Optimization**
+
+### Advanced Configuration
+```python
+from vllm import LLM, SamplingParams
+
+# High-performance configuration for security operations
+llm = LLM(
+    model="Qwen/Qwen2.5-14B-Instruct",  # Great for security analysis
+    trust_remote_code=True,
+    tensor_parallel_size=2,
+    
+    # Memory optimization
+    gpu_memory_utilization=0.95,
+    max_model_len=32768,  # Long context for log analysis
+    
+    # Performance tuning
+    enforce_eager=False,    # Enable CUDA graphs
+    use_v2_block_manager=True,
+    
+    # Security features
+    disable_custom_all_reduce=True,  # Prevent potential vulnerabilities
+)
+```
+
+### Batch Processing for Security Analysis
+```python
+def analyze_security_batch(log_entries):
+    """Process multiple security events efficiently"""
+    
+    prompts = [
+        f"Analyze this log for security threats: {entry}"
+        for entry in log_entries
+    ]
+    
+    sampling_params = SamplingParams(
+        temperature=0.1,  # Deterministic security analysis
+        max_tokens=256,
+        top_p=0.9
+    )
+    
+    outputs = llm.generate(prompts, sampling_params)
+    return [output.outputs[0].text for output in outputs]
+```
+
+---
+
+## 🌐 **OpenAI-Compatible API Testing**
+
+### Chat Completions (Security Use Case)
+```bash
+curl -X POST "http://localhost:8000/v1/chat/completions" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model": "meta-llama/Llama-3.1-8B-Instruct",
+        "messages": [
+            {
+                "role": "system", 
+                "content": "You are a cybersecurity analyst. Analyze security events and provide threat assessments."
+            },
+            {
+                "role": "user", 
+                "content": "Analyze this Windows Event Log entry:\nEvent ID: 4624\nUser: Administrator\nLogon Type: 3\nSource IP: 192.168.1.100\nIs this suspicious?"
+            }
+        ],
+        "temperature": 0.2,
+        "max_tokens": 300
+    }'
+```
+
+### Streaming Responses for Real-time Analysis
+```bash
+curl -X POST "http://localhost:8000/v1/chat/completions" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model": "meta-llama/Llama-3.1-8B-Instruct",
+        "messages": [{"role": "user", "content": "Monitor this security alert in real-time: "}],
+        "stream": true,
+        "temperature": 0.3
+    }'
+```
+
+---
+
+## 🔧 **Monitoring & Debugging**
+
+### Performance Metrics
+```python
+from vllm import LLM
+import time
+
+# Performance monitoring
+def benchmark_inference():
+    llm = LLM(model="meta-llama/Llama-3.1-8B-Instruct")
+    
+    test_prompts = ["Security analysis test: " + str(i) for i in range(100)]
+    
+    start_time = time.time()
+    outputs = llm.generate(test_prompts)
+    end_time = time.time()
+    
+    throughput = len(test_prompts) / (end_time - start_time)
+    print(f"Throughput: {throughput:.2f} requests/second")
+
+benchmark_inference()
+```
+
+### Health Check Endpoint
+```bash
+curl http://localhost:8000/health
+# Returns model status and queue information
+```
+
+### Memory Usage Monitoring
+```bash
+# Docker container stats
+docker stats vllm_llama8b
+
+# GPU memory usage
+nvidia-smi --query-gpu=memory.used,memory.total --format=csv
+```
+
+---
+
+## 📁 **Model Management**
+
+### Model Caching with Security Verification
+```bash
+# Create secure model cache directory
+mkdir -p ~/.cache/huggingface/hub
+chmod 700 ~/.cache/huggingface/hub
+
+# Cache models with SafeTensors preference
+export VLLM_USE_MODELSCOPE=false
+export HF_HUB_ENABLE_HF_TRANSFER=1
+```
+
+### Multi-Model Deployment
+```python
+# Multiple specialized security models
+security_models = {
+    "threat_analysis": "meta-llama/Llama-3.1-8B-Instruct",
+    "code_review": "microsoft/Phi-3-small-128k-instruct", 
+    "malware_detection": "Qwen/CodeQwen1.5-7B-Chat"
+}
+
+# Initialize multiple LLM instances
+llms = {}
+for name, model_path in security_models.items():
+    llms[name] = LLM(
+        model=model_path,
+        trust_remote_code=True,
+        safetensors_only=True
+    )
+```
+
+---
+
+## 🚨 **Troubleshooting Common Issues**
+
+### Memory Issues
+```bash
+# Problem: Out of Memory Error
+# Solution: Reduce GPU memory utilization
+--gpu-memory-utilization 0.8
+
+# Or enable memory mapping
+--swap-space 20  # GB of swap space
+```
+
+### Performance Issues
+```bash
+# Problem: Slow inference
+# Solution: Enable CUDA graphs
+--enforce-eager=false
+
+# Or enable chunked prefill for long contexts
+--enable-chunked-prefill
+```
+
+### Security Issues
+```bash
+# Problem: Unsafe model loading
+# Solution: Force SafeTensors only
+--safetensors-only
+
+# Or disable custom operations
+--disable-custom-all-reduce
+```
+
+---
+
+## 🔄 **Deployment Patterns**
+
+### Production Load Balancing
+```yaml
+# docker-compose.example.yml
+version: '3.8'
+services:
+  vllm-server:
+    image: vllm/vllm-openai:latest
+    runtime: nvidia
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=${HF_TOKEN}
+    command: >
+      --model meta-llama/Llama-3.1-8B-Instruct
+      --safetensors
+      --gpu-memory-utilization 0.9
+    deploy:
+      replicas: 2
+    ports:
+      - "8000:8000"
+    
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+```
+
+### High Availability Setup
+```bash
+# Multiple vLLM instances behind load balancer
+for i in {8001..8004}; do
+    docker run -d --runtime nvidia --gpus all \
+        -p $i:8000 \
+        --name vllm-$i \
+        vllm/vllm-openai:latest \
+        --model meta-llama/Llama-3.1-8B-Instruct \
+        --safetensors
+done
+
+# Configure HAProxy or Nginx to load balance 8001-8004
+```
+
+---
+
+## 📈 **Security Operations Integration**
+
+### OpenWebUI Integration
+```python
+# vLLM as backend for OpenWebUI security agents
+def setup_security_openwebui():
+    """Configure vLLM for OpenWebUI security pipelines"""
+    
+    # Start vLLM server
+    docker run --runtime nvidia --gpus all \
+        -p 8000:8000 \
+        vllm/vllm-openai:latest \
+        --model meta-llama/Llama-3.1-8B-Instruct \
+        --safetensors \
+        --api-key your-secure-api-key
+    
+    # Configure OpenWebUI to use vLLM endpoint
+    # http://localhost:8000/v1 with API key authentication
+```
+
+### Security Agent Orchestration
+```python
+class SecurityAgentOrchestrator:
+    def __init__(self):
+        self.llm = LLM(
+            model="meta-llama/Llama-3.1-8B-Instruct",
+            safetensors_only=True
+        )
+    
+    def analyze_threat(self, event_data):
+        """Security threat analysis with context"""
+        
+        system_prompt = """
+        You are a cybersecurity analyst. Analyze the provided security event:
+        1. Identify potential threats
+        2. Assess risk level (Low/Medium/High)
+        3. Recommend immediate actions
+        4. Provide rationale for decisions
+        """
+        
+        user_prompt = f"Security Event Data:\n{event_data}"
+        
+        sampling_params = SamplingParams(
+            temperature=0.1,  # Consistent security analysis
+            max_tokens=400
+        )
+        
+        outputs = self.llm.generate(
+            [{"role": "system", "content": system_prompt},
+             {"role": "user", "content": user_prompt}],
+            sampling_params
+        )
+        
+        return outputs[0].outputs[0].text
+```
+
+---
+
+## 🎯 **Best Practices Summary**
+
+### 🛡️ **Security**
+1. **Always use SafeTensors** - `--safetensors-only`
+2. **Verify model integrity** - Check SHA-256 hashes
+3. **Limit model access** - Use API authentication
+4. **Monitor inference** - Detect unusual patterns
+
+### ⚡ **Performance**
+1. **Use tensor parallelism** for large models
+2. **Enable CUDA graphs** - `--enforce-eager=false`
+3. **Optimize GPU memory** - `--gpu-memory-utilization=0.9`
+4. **Enable chunked prefill** for long contexts
+
+### 🔧 **Production**
+1. **Deploy with Docker** for consistency
+2. **Use OpenAI-compatible API** for integration
+3. **Monitor performance** with health endpoints
+4. **Load balance** for high availability
+
+---
+
+## 📚 **Additional Resources**
+
+- [vLLM Official Documentation](https://docs.vllm.ai/)
+- [SafeTensors Security Guide](https://huggingface.co/docs/safetensors/index)
+- [OpenAI API Compatibility](https://docs.vllm.ai/en/latest/getting_started/quickstart.html#openai-compatible-server)
+- [Performance Tuning Guide](https://docs.vllm.ai/en/latest/performance_tuning/)
+
+---
+
+*Updated for vLLM v0.5.0+ - October 2025*
