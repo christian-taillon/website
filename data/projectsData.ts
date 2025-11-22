@@ -7,20 +7,36 @@ interface Project {
 
 const projectsData: Project[] = [
   {
-    title: 'A Search Engine',
-    description: `What if you could look up any information in the world? Webpages, images, videos
-    and more. Google has many features to help you find exactly what you're looking
-    for.`,
-    imgSrc: '/static/images/google.png',
-    href: 'https://www.google.com',
+    title: 'Log4Shell Hunting',
+    description: `Comprehensive threat hunting guide and detection rules for the Log4Shell (CVE-2021-44228)
+    vulnerability. Includes Splunk queries, YARA rules, and indicators of compromise to help security
+    teams detect and respond to exploitation attempts.`,
+    imgSrc: '/static/images/github.png',
+    href: 'https://github.com/christian-taillon/log4shell-hunting',
   },
   {
-    title: 'The Time Machine',
-    description: `Imagine being able to travel back in time or to the future. Simple turn the knob
-    to the desired date and press "Go". No more worrying about lost keys or
-    forgotten headphones with this simple yet affordable solution.`,
-    imgSrc: '/static/images/time-machine.jpg',
-    href: '/blog/the-time-machine',
+    title: 'Sunburst Hunting',
+    description: `Detection and hunting resources for the SolarWinds Sunburst supply chain attack.
+    Features threat hunting queries, detection logic, and analysis techniques for identifying
+    compromised systems and lateral movement.`,
+    imgSrc: '/static/images/github.png',
+    href: 'https://github.com/christian-taillon/sunburst-hunting',
+  },
+  {
+    title: 'OpenWebUI Contributions',
+    description: `Active contributions to OpenWebUI, an extensible, feature-rich, and user-friendly
+    self-hosted WebUI designed to operate entirely offline. Supporting various LLM runners including
+    Ollama and OpenAI-compatible APIs.`,
+    imgSrc: '/static/images/github.png',
+    href: 'https://openwebui.com/u/christiant/',
+  },
+  {
+    title: 'ACTRA - Arizona Cyber Threat Response Alliance',
+    description: `Director of Threat Intelligence for ACTRA, a collaborative initiative bringing together
+    cybersecurity professionals across Arizona to share threat intelligence, best practices, and defend
+    against cyber threats through community-driven efforts.`,
+    imgSrc: '/static/images/actra.png',
+    href: 'https://actraaz.org/',
   },
 ]
 
